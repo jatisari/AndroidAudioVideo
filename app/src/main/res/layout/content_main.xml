@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="net.agusharyanto.prototypeapps.MainActivity"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_main">
+
+    <!--Button
+        android:id="@+id/buttonAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Audio Player"
+        android:onClick="buttonClick"/>
+    <Button
+        android:id="@+id/buttonAudioRecorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Audio Recorder"
+        android:onClick="buttonClick"/>
+    <Button
+        android:id="@+id/buttonListAudioRecorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List Audio Recorder"
+        android:onClick="buttonClick"/>
+
+    <Button
+        android:id="@+id/buttonTakePicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TakePicture"
+        android:onClick="buttonClick"/>
+    <Button
+        android:id="@+id/buttonTakeVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TakeVideo"
+        android:onClick="buttonClick"/-->
+
+    <ListView
+        android:id="@+id/listViewMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
