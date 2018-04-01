@@ -32,7 +32,6 @@ public class VideoCaptureActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.d("TAG","masukvideo");
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = intent.getData();
             Log.d("TAG", "videouri:"+videoUri.toString());

@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class AudioPlayerActivity extends AppCompatActivity {
 
         private Button b1,b2,b3,b4;
-        private ImageView iv;
         private MediaPlayer mediaPlayer;
 
         private double startTime = 0;
@@ -40,7 +38,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             b2 = (Button) findViewById(R.id.button2);
             b3 = (Button)findViewById(R.id.button3);
             b4 = (Button)findViewById(R.id.button4);
-            iv = (ImageView)findViewById(R.id.imageView);
 
             tx1 = (TextView)findViewById(R.id.textView2);
             tx2 = (TextView)findViewById(R.id.textView3);
@@ -97,7 +94,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
             });
 
-            b1.setOnClickListener(new View.OnClickListener() {
+            b2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int temp = (int)startTime;
@@ -112,7 +109,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 }
             });
 
-            b4.setOnClickListener(new View.OnClickListener() {
+            b1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int temp = (int)startTime;
@@ -128,7 +125,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             });
         }
 
-        private Runnable UpdateSongTime = new Runnable() {
+    /**
+     * Thread untuk timing player
+     */
+    private Runnable UpdateSongTime = new Runnable() {
             public void run() {
                 startTime = mediaPlayer.getCurrentPosition();
                 tx1.setText(String.format("%d min, %d sec",

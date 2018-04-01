@@ -4,7 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import net.agusharyanto.prototypeapps.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +30,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class TakePictureActivity extends AppCompatActivity {
     private Button takePictureButton;
     private ImageView imageView;
-    Uri file;
     public static final int RequestPermissionCode = 1;
     Context context;
 
@@ -70,36 +71,58 @@ public class TakePictureActivity extends AppCompatActivity {
             }
         }
     }
+
+
     public void takePicture(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        file = Uri.fromFile(getOutputMediaFile());
-        Log.d("TAG", "pathfile:"+file.getPath());
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
 
-        startActivityForResult(intent, 100);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Start the image capture intent to take photo
+            startActivityForResult(intent, 100);
+        }
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
-                imageView.setImageURI(file);
+               /// imageView.setImageURI(file);
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                saveImage(imageBitmap,"image");
+                imageView.setImageBitmap(imageBitmap);
+
             }
         }
     }
 
-    private static File getOutputMediaFile(){
+    /**
+     * Method untuk menyimpan bitmap kedalam file
+     * @param bitmap
+     * @param name
+     */
+    private  void saveImage(Bitmap bitmap, String name) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "CameraDemo");
+                Environment.DIRECTORY_PICTURES).getAbsolutePath(), "CameraDemo");
 
         if (!mediaStorageDir.exists()){
-            if (!mediaStorageDir.mkdirs()){
-                return null;
-            }
+            Log.d("TAG","direktori belum ada");
+            mediaStorageDir.mkdir();
         }
-
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return new File(mediaStorageDir.getPath() + File.separator +
-                "IMG_"+ timeStamp + ".jpg");
+        File imageFile = new File(mediaStorageDir, name +timeStamp+ ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
+        }
     }
+
+
 }

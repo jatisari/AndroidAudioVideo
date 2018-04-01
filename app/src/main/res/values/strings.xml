@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PrototypeApps</string>
+    <string name="app_name">Prototype Apps</string>
     <string name="action_settings">Settings</string>
     <string name="back"><![CDATA[<]]></string>
     <string name="rewind"><![CDATA[<<]]></string>

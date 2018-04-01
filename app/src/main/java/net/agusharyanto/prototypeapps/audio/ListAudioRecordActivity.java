@@ -19,11 +19,15 @@ public class ListAudioRecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_audio_record);
         ListView listView = (ListView) findViewById(R.id.listViewFile);
+
         String AudioSavePathInDevice =
                 Environment.getExternalStorageDirectory().getAbsolutePath() + "/soundrec/";
 
         File dirFileObj = new File(AudioSavePathInDevice);
-
+        if (!dirFileObj.exists()) {
+            //folder /SoundRecorder doesn't exist, create the folder
+            dirFileObj.mkdir();
+        }
         List <File> inFiles = getListFiles(dirFileObj);
         ArrayList <String> listfilename = new ArrayList<String>();
         for (File file:inFiles) {

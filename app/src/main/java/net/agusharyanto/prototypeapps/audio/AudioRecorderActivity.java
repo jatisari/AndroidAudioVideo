@@ -19,12 +19,10 @@ import android.widget.Toast;
 
 import com.github.anastr.speedviewlib.SpeedView;
 
-
 import net.agusharyanto.prototypeapps.R;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -33,16 +31,18 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class AudioRecorderActivity extends AppCompatActivity {
 
     Button buttonStart, buttonStop, buttonPlayLastRecordAudio,
-            buttonStopPlayingRecording ;
+            buttonStopPlayingRecording;
     String AudioSavePathInDevice = null;
-    MediaRecorder mediaRecorder ;
-    Random random ;
+    String filename = "";
+    MediaRecorder mediaRecorder;
+    Random random;
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
-    MediaPlayer mediaPlayer ;
+    MediaPlayer mediaPlayer;
     TextView mTimerTextView;
     Context context;
     SpeedView gauge;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +51,9 @@ public class AudioRecorderActivity extends AppCompatActivity {
         buttonStart = (Button) findViewById(R.id.button);
         buttonStop = (Button) findViewById(R.id.button2);
         buttonPlayLastRecordAudio = (Button) findViewById(R.id.button3);
-        buttonStopPlayingRecording = (Button)findViewById(R.id.button4);
+        buttonStopPlayingRecording = (Button) findViewById(R.id.button4);
         mTimerTextView = (TextView) this.findViewById(R.id.timer);
-         gauge = (SpeedView) findViewById(R.id.gaugeChart);
+        gauge = (SpeedView) findViewById(R.id.gaugeChart);
         buttonStop.setEnabled(false);
         buttonPlayLastRecordAudio.setEnabled(false);
         buttonStopPlayingRecording.setEnabled(false);
@@ -64,18 +64,24 @@ public class AudioRecorderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(checkPermission()) {
+                if (checkPermission()) {
+
 
                     AudioSavePathInDevice =
-                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/soundrec/" +
-                                    CreateRandomAudioFileName(5) + "AudioRecording.3gp";
-                    Log.d("TAG", "pathdir:"+  AudioSavePathInDevice);
+                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/soundrec/";
+
+                    Log.d("TAG", "pathdir:" + AudioSavePathInDevice);
+
+                    File dirFileObj = new File(AudioSavePathInDevice);
+                    if (!dirFileObj.exists()) {
+                        dirFileObj.mkdir();
+                    }
+
                     MediaRecorderReady();
 
                     try {
                         mediaRecorder.prepare();
                         mediaRecorder.start();
-                      //  initGauge(20);
                         mStartTime = SystemClock.elapsedRealtime();
                         mHandler.postDelayed(mTickExecutor, 100);
                     } catch (IllegalStateException e) {
@@ -125,7 +131,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
                 mediaPlayer = new MediaPlayer();
                 try {
-                    mediaPlayer.setDataSource(AudioSavePathInDevice);
+                    mediaPlayer.setDataSource(filename);
                     mediaPlayer.prepare();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -145,7 +151,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 buttonStopPlayingRecording.setEnabled(false);
                 buttonPlayLastRecordAudio.setEnabled(true);
 
-                if(mediaPlayer != null){
+                if (mediaPlayer != null) {
                     mediaPlayer.stop();
                     mediaPlayer.release();
                     MediaRecorderReady();
@@ -154,25 +160,25 @@ public class AudioRecorderActivity extends AppCompatActivity {
         });
 
     }
-    List values = new ArrayList();
 
 
-    public void MediaRecorderReady(){
-        mediaRecorder=new MediaRecorder();
+    public void MediaRecorderReady() {
+        mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(AudioSavePathInDevice);
+        filename = AudioSavePathInDevice + CreateRandomAudioFileName(5) + "myaudiorecord.3gp";
+        mediaRecorder.setOutputFile(filename);
     }
 
-    public String CreateRandomAudioFileName(int string){
-        StringBuilder stringBuilder = new StringBuilder( string );
-        int i = 0 ;
-        while(i < string ) {
+    public String CreateRandomAudioFileName(int string) {
+        StringBuilder stringBuilder = new StringBuilder(string);
+        int i = 0;
+        while (i < string) {
             stringBuilder.append(RandomAudioFileName.
                     charAt(random.nextInt(RandomAudioFileName.length())));
 
-            i++ ;
+            i++;
         }
         return stringBuilder.toString();
     }
@@ -183,25 +189,25 @@ public class AudioRecorderActivity extends AppCompatActivity {
     }
 
     @Override
-        public void onRequestPermissionsResult(int requestCode,
-        String permissions[], int[] grantResults) {
-            switch (requestCode) {
-                case RequestPermissionCode:
-                    if (grantResults.length> 0) {
-                        boolean StoragePermission = grantResults[0] ==
-                                PackageManager.PERMISSION_GRANTED;
-                        boolean RecordPermission = grantResults[1] ==
-                                PackageManager.PERMISSION_GRANTED;
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case RequestPermissionCode:
+                if (grantResults.length > 0) {
+                    boolean StoragePermission = grantResults[0] ==
+                            PackageManager.PERMISSION_GRANTED;
+                    boolean RecordPermission = grantResults[1] ==
+                            PackageManager.PERMISSION_GRANTED;
 
-                        if (StoragePermission && RecordPermission) {
-                            Toast.makeText(context, "Permission Granted",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(context,"Permission Denied",Toast.LENGTH_LONG).show();
-                        }
+                    if (StoragePermission && RecordPermission) {
+                        Toast.makeText(context, "Permission Granted",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(context, "Permission Denied", Toast.LENGTH_LONG).show();
                     }
-                    break;
-            }
+                }
+                break;
+        }
     }
 
     public boolean checkPermission() {
@@ -221,7 +227,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
         @Override
         public void run() {
             tick();
-            mHandler.postDelayed(mTickExecutor,100);
+            mHandler.postDelayed(mTickExecutor, 100);
         }
     };
 
@@ -230,17 +236,15 @@ public class AudioRecorderActivity extends AppCompatActivity {
         int minutes = (int) (time / 60000);
         int seconds = (int) (time / 1000) % 60;
         int milliseconds = (int) (time / 100) % 10;
-        mTimerTextView.setText(minutes+":"+(seconds < 10 ? "0"+seconds : seconds)+"."+milliseconds);
+        mTimerTextView.setText(minutes + ":" + (seconds < 10 ? "0" + seconds : seconds) + "." + milliseconds);
         if (mediaRecorder != null) {
             amplitudes[i] = mediaRecorder.getMaxAmplitude();
             int iamplitude = amplitudes[i] * 100 / 32767;
-            Log.d("Voice Recorder","amplitude: "+iamplitude);
+            Log.d("Voice Recorder", "amplitude: " + iamplitude);
 
             gauge.speedTo(iamplitude);
 
-            //initGauge((amplitudes[i] * 100 / 32767));
-          //  gauge.setData(values);
-            if (i >= amplitudes.length -1) {
+            if (i >= amplitudes.length - 1) {
                 i = 0;
             } else {
                 ++i;

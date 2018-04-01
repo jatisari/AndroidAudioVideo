@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         initMenu();
     }
 
+    /*
+       Method initMenu digunakan untuk menginisialisasi data menu dan ditampilkan ke listview
+     */
     private void initMenu() {
         String[] menus = {"Audio Player","Audio Recorder","List Audio","Take Picture","Video Recorder","Youtube", "Web View"};
         listMenu =  new ArrayList<String>(Arrays.asList(menus));
@@ -58,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method openMenu digunakan untuk melakukan aksi terhadap menu yang dipilih
+     * @param pmenu
+     */
     private void openMenu(String pmenu) {
         Intent intent;
         switch (pmenu) {
@@ -115,32 +122,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-/*
-    public void buttonClick(View view) {
-        Intent intent;
-        switch (view.getId()) {
-            case R.id.buttonAudio:
-                 intent = new Intent(MainActivity.this, AudioPlayerActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.buttonAudioRecorder:
-                 intent = new Intent(MainActivity.this, AudioRecorderActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.buttonListAudioRecorder:
-                intent = new Intent(MainActivity.this, ListAudioRecordActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.buttonTakePicture:
-                intent = new Intent(MainActivity.this, TakePictureActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.buttonTakeVideo:
-                intent = new Intent(MainActivity.this, WebViewActivity.class);
-                startActivity(intent);
-                break;
-            default:
-                break;
-        }
-    }*/
+
 }
